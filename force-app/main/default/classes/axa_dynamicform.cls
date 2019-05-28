@@ -1,5 +1,5 @@
 public with sharing class axa_dynamicform {
-    //test23
+    //test2344
     @AuraEnabled
     public static Opportunity getOpp(Id recId) {
         Opportunity o =[SELECT Id, Name, AccountId FROM Opportunity where id =:recId];
