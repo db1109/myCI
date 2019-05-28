@@ -1,0 +1,178 @@
+<aura:component implements="lightning:actionOverride,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader" controller="axa_dynamicform">
+    <aura:attribute name="addons" type="string" default="" />
+    <aura:attribute name="producttype" type="string" default="" />
+    <aura:attribute name="policytype" type="string" default="" /> 
+    <aura:attribute name="multiple" type="Boolean" default="false"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    <aura:attribute name="activesection" type="List" default="['A','B']"/>
+    <aura:attribute name="recordId" type="Id" default=""/>
+    <aura:attribute name="ParentOpp" type="Opportunity" default=""/>
+    <aura:attribute name="policy" type="Policy__c" default=""/>
+    <aura:attribute name="policyID" type="Id" default=""/>
+    <aura:attribute name="fasttrack" type="Boolean" default="false"/>
+    <aura:attribute name="workingbody" type="Boolean" default="false"/>
+    <aura:attribute name="stringerminds" type="Boolean" default="false"/>
+    <aura:attribute name="doctor" type="Boolean" default="false"/>
+    <aura:attribute name="eap" type="Boolean" default="false"/>
+    <aura:attribute name="occupationalhealth" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="container">
+        <lightning:card iconName="standard:lead" title="Policy Form" ><lightning:messages />
+            <lightning:recordEditForm recordId="{!v.policy.Id}" onload="{!c.handleLoad}" onsubmit="{!c.handleSubmit}" onsuccess="{!c.handleSuccess}" objectApiName="Policy__c">
+                <lightning:messages />
+                <lightning:accordion aura:id="accordion" activeSectionName="{!v.activesection}" allowMultipleSectionsOpen="true">
+                    <lightning:accordionSection name="A" label="Plan Header">
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="3"><lightning:inputField aura:id="poltype" fieldName="Policy_Type__c" onchange="{!c.policyChanged}" /></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="3"><lightning:inputField aura:id="opp" fieldName="Opportunity__c" /></lightning:layoutItem>					
+                            <lightning:layoutItem padding="horizontal-small" size="3"><lightning:inputField aura:id="parentacc" fieldName="Parent_Account__c" /></lightning:layoutItem>					
+                            <aura:if isTrue="{!v.policytype =='Plan'}"> 
+                                <lightning:layoutItem padding="horizontal-small" size="3"><lightning:inputField aura:id="accxx" fieldName="Account__c" /></lightning:layoutItem>					
+                            </aura:if>
+                            <aura:if isTrue="{!v.policytype =='Plan Variant'}">
+                                <lightning:layoutItem padding="horizontal-small" size="3"><lightning:inputField aura:id="parentpolicy" fieldName="Policy__c" /></lightning:layoutItem>					
+                            </aura:if></lightning:layout>
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="B" label="Benefits">
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Dependent_Off_Age_Std__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Dependent_Off_Age_FTE__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Hospital_Network__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Specialist_Cover__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="NHS_Cash_Benefit__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="NHS_Cash_Benefit__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="NHS_Amount_Per_Night__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Outpatient_Drugs_and_Dressings__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Outpatient_Benefit_Limitation__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Maternity_Cash_Benefit__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Maternity_10_Month_Moratorium__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Maternity_Amount_Per_Pregnancy__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Psychiatric__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Psychiatric_Benefit_Details__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Cancer_Treatment__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Chemo_Benefit_Amount_Per_Night__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Chemo_Benefit_Amount_Per_Pol_Yr__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Chemo_Cash_Benefit__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Travel__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Travel_Other_Provider__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Travel_Vaccinations__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Dental_Care__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Dental_Care_Other_Provider__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Ongoing_Agreement__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Ongoing_Agreement_Detail__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="ICARUS__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Emergency_in_Patient_Cover__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Outpatient_Drugs_and_Dressings__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Other_Private_GP_Fees__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Optical_Cover__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Chronic_Cover__c"/></lightning:layoutItem>			
+                        </lightning:layout>
+                        <lightning:layout >
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Health_Check_Benefit__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Unproven_Treatment__c"/></lightning:layoutItem>			
+                            <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Unproven_Treatment_Note__c"/></lightning:layoutItem>			
+                        </lightning:layout>                    
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="C" label="Add Ons">
+                    <lightning:layout >
+                            <lightning:layoutItem  size="12" ><lightning:inputField aura:id="addon" fieldName="Add_Ons__c" onchange="{!c.addOnChanged}" /></lightning:layoutItem>			
+                    </lightning:layout>
+                        <aura:if isTrue="{!v.fasttrack}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">Fast Track Section</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Fast_Track_Appointment_Field__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Fast_Track_Appointment_Field_Two__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+                        <aura:if isTrue="{!v.workingbody}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">Working Body Section</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Working_Body_Field_One__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Working_Body_Field_Two__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+                        <aura:if isTrue="{!v.stringerminds}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">Stronger MindsSection</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Stronger_Minds_Field_One__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Stronger_Minds__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+                        <aura:if isTrue="{!v.doctor}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">Doctor@Hand Section</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Doctor_At_Hand_Sales_Type__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Doctor_At_Hand_Dependents_Covered__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Doctor_At_Hand_Fast_Track__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Doctor_At_Hand_Dependents_Covered__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Doctor_AtH_Consultations_per_Employee__c" /></lightning:layoutItem>
+                            </lightning:layout></aura:if>
+                        <aura:if isTrue="{!v.eap}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">EAP Section</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="EAP_Field_One__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="EAP_Field_One__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+                        <aura:if isTrue="{!v.occupationalhealth}">
+                            <div class="slds-section slds-is-open"><h3 class="slds-section__title">
+                                <div aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                                    <span class="slds-truncate" title="Section Title">Occupational Health Section</span>
+                                </div></h3></div>
+                            <lightning:layout >
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Occupational_Health_Field_One__c" /></lightning:layoutItem>
+                                <lightning:layoutItem padding="horizontal-small" size="4"><lightning:inputField fieldName="Occupational_Health_Field_One__c" /></lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>                        
+                        <lightning:layout >
+                            <lightning:layoutItem padding="around-large">
+                                <lightning:button disabled="{!v.disabled}" variant="brand" type="submit" name="save" label="Save" />
+                                <lightning:button variant="brand"  label="New Policy"  onclick="{!c.handleNewClick }" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:accordionSection></lightning:accordion>
+            </lightning:recordEditForm>
+        </lightning:card></div>
+</aura:component>
